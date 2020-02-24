@@ -1,7 +1,7 @@
 # craXcel
 Remove pesky Workbook and Worksheet protection from Microsoft Excel files.
 
-### Why did I make this?
+### Why have I made this?
 Excel Workbook and Worksheet protection is great. It serves its purpose to prevent the defacing (accidental or otherwise) of precious files of both business and personal users. 
 
 However, sometimes full access to the files are needed and the password simply isn't known, whether it's been lost, forgotten, or not provided. 
@@ -12,7 +12,7 @@ Comimg from an IT background, typical cases I've personally encountered are:
 - Suppliers/vendors/partners provide complex spreadsheets as templates that are password protected, and in an effort to backward engineer them to better integrate a solution they need to be unlocked
   - With this one I'd recommend simply asking for the passwords first!
   
-Although craXcel is built to deal with these cases, the reason I created it was to put what I've learnt so far with Python (and programming in general) to the test. 
+Although craXcel has been built to deal with these cases, the reason I created it was to put what I've learnt so far with Python (and programming in general) to the test. 
  
 I appreciate it may not be the cleanest of code, nor the most efficient or bug-free, but it's a small program I'm proud to call my own.
 
@@ -58,12 +58,12 @@ craXcel does not ever "crack" or otherwise know the passwords that protect the W
 ### Advanced								
 - craXcel has several options that can be passed in for more advanced uses, i.e.:								
   - Selecting to only remove Workbook protection (leaving Worksheet protection intact)								
-    - python craxcel.py yourfile.xlsx -wb								
+    - <b>python craxcel.py yourfile.xlsx -wb</b>							
   - Selecting to only remove Worksheet protection (leaving Workbook protection intact)								
-    - python craxcel.py yourfile.xlsx -ws								
+    - <b>python craxcel.py yourfile.xlsx -ws</b>							
   - Running without creating a backup file								
-    - python craxcel.py yourfile.xlsx --no_backup								
-- For a full list of options, enter the command 'python craxcel.py --help' in the terminal								
+    - <b>python craxcel.py yourfile.xlsx --no_backup</b>								
+- For a full list of options, enter the command: <b>python craxcel.py --help</b>							
 
 ### Supported Formats
 Right now, supported formats are limited to the more modern .xlsx and .xlsm formats. Other formats may work, but have not been explicity tested.
