@@ -43,20 +43,26 @@ class ExcelFile():
 
     def backup(self):
         shutil.copyfile(self.filepath,self._get_backup_filepath())
+        print('Backup created...')
 
     def unpackage(self):
         self._change_extension_to_zip()
         zipfile.ZipFile(self.zipped_filepath,'r').extractall(self.unpacked_folderpath)
         self._delete_zip()
+        print('File unpacked...')
 
     def unprotect_workbook(self):
         wb = WorkbookXML(self.workbook_xml)
         wb._remove_protection_element()
+        print('Workbook unprotected...')
 
     def unprotect_worksheets(self):
+        sheet_count = 0
         for ws_file in self._get_worksheets():
             ws = WorksheetXML(ws_file)
             ws._remove_protection_element()
+            sheet_count += 1
+            (f'Worksheet {sheet_count} unprotected...')
 
     def repackage(self):
         filepaths = _get_file_listing(self.unpacked_folderpath)
@@ -66,9 +72,11 @@ class ExcelFile():
                 repackaged_zip.write(filepath,arcname=rel_filepath)
             
         self._change_extension_to_original()
+        print('File repackaged...')
 
     def cleanup(self):
         shutil.rmtree(self.unpacked_folderpath)
+        print('Cleaning up temporary files...')
 
 class WorkbookXML():
     def __init__(self,filepath):
@@ -123,8 +131,12 @@ def Main():
                         help=f'retains the {TEMP_DIR} folder. Useful for dubugging exceptions')                        
     args = parser.parse_args()
 
+    print('\nStarting craXcel...')
+    print(f'Checking file {args.file}...')
+
     if os.path.isfile(args.file):
         cxl = ExcelFile(args.file)
+        print('File accepted...')
 
         if args.no_backup == False:
             try:
@@ -179,7 +191,7 @@ def Main():
     else:
         raise FileNotFoundError(errno.ENOENT, os.strerror(errno.ENOENT), args.file)
 
-    print('\ncraXcel suXcessful')
+    print(f'\ncraXcel suXcessful')
 
 if __name__ == '__main__':
     Main()
