@@ -50,16 +50,13 @@ class MicrosoftOfficeFile(metaclass=abc.ABCMeta):
         self._file = FileInfo(filepath)
         self._args = user_args
 
-        # Creates a path in the app processing dir with a folder that based on
-        # a universally unique identifier.
+        # Creates a universally unique path in the app temp directory
         self._temp_processing_dir = os.path.join(APP_TEMP_DIR, str(uuid.uuid4()))
 
-        # The root directory where XML files are stored when unpackaged, which
-        # differs for each MicrosoftOffice application.
-        # TO-DO: Change to an abstract property
-        self._xml_root_dir = xml_root_dir_name
+        # The root directory where XML files are stored when unpackaged
+        self._xml_root_dir = os.path.join(self._temp_processing_dir, xml_root_dir_name)
 
-        self._vba_filepath = os.path.join(self._temp_processing_dir, self._xml_root_dir, 'vbaProject.bin')
+        self._vba_filepath = os.path.join(self._xml_root_dir, 'vbaProject.bin')
     
     def unlock(self):
         """
@@ -94,7 +91,7 @@ class MicrosoftOfficeFile(metaclass=abc.ABCMeta):
         with the original file's extension restored. This makes the newly
         repackaged file openable by the original application.
         """
-        file_suffix = '_{}{}'.format(APP_NAME, self._file.extension)
+        file_suffix = f'_{APP_NAME}{self._file.extension}'
         filename = self._file.name.replace(self._file.extension, file_suffix)
         unlocked_filepath = os.path.join(APP_SAVE_DIR, filename)
 
@@ -168,7 +165,6 @@ class MicrosoftOfficeFile(metaclass=abc.ABCMeta):
         Removes protection specific to the target application. Abstract method
         that requires implementation in all child classes.
         """
-        return
 
 class MicrosoftExcel(MicrosoftOfficeFile):
     """
@@ -178,8 +174,8 @@ class MicrosoftExcel(MicrosoftOfficeFile):
 
     def __init__(self, user_args, locked_filepath):
         super().__init__(user_args, locked_filepath, 'xl')
-        self._workbook_xml_filepath = os.path.join(self._temp_processing_dir, self._xml_root_dir, 'workbook.xml')
-        self._worksheet_xml_dir = os.path.join(self._temp_processing_dir, self._xml_root_dir, 'worksheets')
+        self._workbook_xml_filepath = os.path.join(self._xml_root_dir, 'workbook.xml')
+        self._worksheet_xml_dir = os.path.join(self._xml_root_dir, 'worksheets')
         self._workbook_tag_names = ['fileSharing', 'workbookProtection']
         self._worksheet_tag_names = ['sheetProtection']
 
@@ -220,7 +216,7 @@ class MicrosoftWord(MicrosoftOfficeFile):
     
     def __init__(self, user_args, locked_filepath):
         super().__init__(user_args, locked_filepath, 'word')
-        self._document_xml_filepath = os.path.join(self._temp_processing_dir, self._xml_root_dir, 'settings.xml')
+        self._document_xml_filepath = os.path.join(self._xml_root_dir, 'settings.xml')
         self._document_tag_names = ['writeProtection', 'documentProtection']
 
     def _remove_application_specific_protection(self):
@@ -235,7 +231,7 @@ class MicrosoftPowerpoint(MicrosoftOfficeFile):
     """
     def __init__(self, user_args, locked_filepath):
         super().__init__(user_args, locked_filepath, 'ppt')
-        self._presentation_xml_filepath = os.path.join(self._temp_processing_dir, self._xml_root_dir, 'presentation.xml')
+        self._presentation_xml_filepath = os.path.join(self._xml_root_dir, 'presentation.xml')
         self._presentation_tag_names = ['modifyVerifier']
 
     def _remove_application_specific_protection(self):
@@ -253,12 +249,13 @@ def Main():
     if args.list:
         print('\nList mode enabled')
         filepaths = read_list_of_filepaths(args.filepath)
-        print('{} files detected'.format(len(filepaths)))
+        print(f'{len(filepaths)} files detected')
     else:
         filepaths = [args.filepath]
 
+    files_unlocked = 0
     for locked_filepath in filepaths:
-        print('\nChecking file {}...'.format(locked_filepath))
+        print(f'\nChecking file {locked_filepath}...')
 
         if os.path.isfile(locked_filepath):
             file_info = FileInfo(locked_filepath)
@@ -284,16 +281,18 @@ def Main():
                 print('File rejected. Unsupported file extension.')
                 break
 
-            print('File accepted...')
+            print('File accepted...')            
 
             try:
-                cxl.unlock()                
+                cxl.unlock()
+                files_unlocked += 1           
             except Exception:
-                print('An error occured while unlocking {}'.format(locked_filepath))
+                print(f'An error occured while unlocking {locked_filepath}')
 
         else:
             print('File not found...')
 
+    print(f'\nSummary: {files_unlocked}/{len(filepaths)} files unlocked')
     print('\ncraXcel finished')
 
 def read_list_of_filepaths(list_filepath):

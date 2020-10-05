@@ -1,0 +1,6 @@
+C:\Users\PeteM\source\repos\craXcel-cli\test-files\locked.docm
+C:\Users\PeteM\source\repos\craXcel-cli\test-files\locked.docx
+C:\Users\PeteM\source\repos\craXcel-cli\test-files\locked.pptm
+C:\Users\PeteM\source\repos\craXcel-cli\test-files\locked.pptx
+C:\Users\PeteM\source\repos\craXcel-cli\test-files\locked.xlsm
+C:\Users\PeteM\source\repos\craXcel-cli\test-files\locked.xlsx
