@@ -143,7 +143,7 @@ class MicrosoftOfficeFile(metaclass=abc.ABCMeta):
 
     def _remove_vba_protection(self):
         """
-        TO-DO: Reads the file's underlying vbaProject.bin file in HEX form,
+        Reads the file's underlying vbaProject.bin file in HEX form,
         replacing the string responsible for protecting the file with a
         password.        
         """
