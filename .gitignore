@@ -1,3 +1,6 @@
 /__pycache__
+/test
 /temp
-*-ignore*
+/unlocked
+/.vscode
+test.py
