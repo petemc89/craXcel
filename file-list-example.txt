@@ -1,0 +1,6 @@
+C:\path\to\craxcel\install\test-files\locked.docm
+C:\path\to\craxcel\install\test-files\locked.docx
+C:\path\to\craxcel\install\test-files\locked.pptm
+C:\path\to\craxcel\install\test-files\locked.pptx
+C:\path\to\craxcel\install\test-files\locked.xlsm
+C:\path\to\craxcel\install\test-files\locked.xlsx
