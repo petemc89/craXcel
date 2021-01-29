@@ -4,11 +4,12 @@ based applications.
 """
 import abc
 import argparse
-import binascii
 import os
 import shutil
 import uuid
 import zipfile
+import mmap
+import re
 from lxml import etree
 
 APP_NAME = 'craXcel'
@@ -145,17 +146,9 @@ class MicrosoftOfficeFile(metaclass=abc.ABCMeta):
         password.        
         """
         if os.path.isfile(self._vba_filepath):
-            with open(self._vba_filepath, 'rb') as f:
-                content = f.read()
-
-            hex_content = binascii.hexlify(content)
-
-            unlocked_hex = hex_content.replace(b'445042', b'445078')
-
-            unlocked_bin = binascii.unhexlify(unlocked_hex)
-
-            with open(self._vba_filepath, 'wb') as f:
-                f.write(unlocked_bin)
+            with open(self._vba_filepath, 'r+b') as f:
+                m = mmap.mmap(f.fileno(), 0)
+                m[:] = re.sub(b'DPB', b'DPx', m[:])
 
             print('VBA protection removed...')
 
