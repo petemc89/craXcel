@@ -1,7 +1,3 @@
-### [Check out the new web app!](https://www.craxcel.com)
-
----
-
 # craXcel-cli (v2.0)
 Python command line application to unlock Microsoft Office password protected files.
 
